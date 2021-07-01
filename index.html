@@ -1,55 +1,12 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-</head>
-<body>
-    <script type="text/javascript" src="HTMLClient/Scripts/jquery-2.2.4.min.js"></script>
-    <script type="text/javascript">
-
-        //This adapter file allows POSTing to any url via a GET
-        //Main advantage of this method is that it is IE11 compatible (posting to new named tab is no longer possible in IE11 w/o adjusting the security policy)
-
-        //Must pass a param called url
-
-        $(document).ready(function () {
-
-            //get all the params from the query string
-            var urlParams;
-            (window.onpopstate = function () {
-                var match,
-                    pl = /\+/g,  // Regex for replacing addition symbol with a space
-                    search = /([^&=]+)=?([^&]*)/g,
-                    decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-                    query = window.location.search.substring(1);
-
-                urlParams = {};
-                while (match = search.exec(query))
-                    urlParams[decode(match[1])] = decode(match[2]);
-            })();
-
-            var postLaunch = function (url, params) {
-
-                var form = document.createElement("form");
-                form.setAttribute("method", "post");
-                form.setAttribute("action", url);
-                for (var i in params) {
-                    if (params.hasOwnProperty(i)
-                        && i != 'url' //no need to submit the url param itself
-                        ) {
-                        var input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = i;
-                        input.value = params[i];
-                        form.appendChild(input);
-                    }
-                }
-                document.body.appendChild(form);
-                form.submit();               
-            };
-
-            postLaunch('https://callback.athom.com', urlParams);
-        });
-    </script>
-</body>
+   <head>
+      <script>
+         function loadNewDoc(){ 
+            var loc = window.location;
+            window.location = 'callback.athom.com' + loc.port + loc.pathname + loc.search; 
+         };
+      </script>
+   </head>
+   <body onLoad="loadNewDoc()">
+   </body>  
 </html>
